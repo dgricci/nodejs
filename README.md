@@ -1,4 +1,4 @@
-% Environnement GoLang
+% Environnement NodeJS
 % Didier Richard
 % rév. 0.0.1 du 11/11/2016
 
