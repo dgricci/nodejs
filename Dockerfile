@@ -1,62 +1,32 @@
-# nodejs minimalist environment
-FROM dgricci/jessie:0.0.3
-MAINTAINER Didier Richard <didier.richard@ign.fr>
+# nodejs environment
+FROM dgricci/jessie:0.0.4
+LABEL       version="1.0.0" \
+            node="v8.11.3" \
+            yarn="v1.9.2" \
+            gulpCli="v2.0.1" \
+            os="Debian Jessie" \
+            description="Node (v8.11.3) with Yarn (v8.11.3) and Gulp-Cli (v2.0.1) on Debian Jessie"
+
+MAINTAINER  Didier Richard <didier.richard@ign.fr>
 
 # Cf. https://github.com/nodejs/docker-node
 ARG NPM_CONFIG_LOGLEVEL
 ENV NPM_CONFIG_LOGLEVEL ${NPM_CONFIG_LOGLEVEL:-info}
 ARG NODE_VERSION
-ENV NODE_VERSION ${NODE_VERSION:-7.0.0}
+ENV NODE_VERSION ${NODE_VERSION:-8.11.3}
+ARG YARN_VERSION
+ENV YARN_VERSION ${YARN_VERSION:-1.9.2}
 
-RUN \
-    groupadd -r node \
-    && \
-    useradd -r -g node node
+# volume for user's projects
+VOLUME /src
 
-# gpg keys listed at https://github.com/nodejs/node#release-team
-RUN \
-    set -ex \
-    && \
-    for key in \
-        9554F04D7259F04124DE6B476D5A82AC7E37093B \
-        94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
-        0034A06D9D9B0064CE8ADF6BF1747F4AD2306D93 \
-        FD3A5288F042B6850C66B31F09FE44734EB7990E \
-        71DCFD284A79C3B38668286BC97EC7A07EDE3FC1 \
-        DD8F2338BAE7501E3DD5AC78C273792F7D83545D \
-        C4F0DFFF4E8C1A8236409D08E73BC641CC11F4C8 \
-        B9AE9905FFD7803F25714661B63B535A4C206CA9 \
-    ; do \
-        gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key"; \
-    done
+COPY build.sh /tmp/build.sh
+RUN /tmp/build.sh && rm -f /tmp/build.sh
 
-RUN \
-    buildDeps='xz-utils' \
-    && \
-    set -x \
-    && \
-    apt-get update \
-    && \
-    apt-get install -y $buildDeps --no-install-recommends \
-    && \
-    rm -rf /var/lib/apt/lists/* \
-    && \
-    curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
-    && \
-    curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-    && \
-    gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc \
-    && \
-    grep " node-v$NODE_VERSION-linux-x64.tar.xz\$" SHASUMS256.txt | sha256sum -c - \
-    && \
-    tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
-    && \
-    rm "node-v$NODE_VERSION-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
-    && \
-    apt-get purge -y --auto-remove \
-        $buildDeps \
-    && \
-    ln -s /usr/local/bin/node /usr/local/bin/nodejs
+# Externally accessible data is by default put in /src
+# use -v at run time !
+WORKDIR /src
 
-CMD ["node"]
+# Output capabilities by default.
+CMD yarn versions && gulp --version
 

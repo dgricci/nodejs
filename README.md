@@ -1,22 +1,30 @@
-% Environnement NodeJS
-% Didier Richard
-% rév. 0.0.1 du 11/11/2016
+% Environnement NodeJS  
+% Didier Richard  
+% 29/07/2018
+
+---
+
+revision:
+- 0.0.1 : 11/11/2016  
+- 0.0.2 : 29/07/2018  
 
 ---
 
 # Building #
 
 ```bash
-$ docker build -t dgricci/nodejs:0.0.1 -t dgricci/nodejs:latest .
+$ docker build -t dgricci/nodejs:$(< VERSION) .
+$ docker tag dgricci/nodejs:$(< VERSION) dgricci/nodejs:latest
 ```
 
-## Behind a proxy (e.g. 10.0.1.2:3128) ##
+## Behind a proxy (e.g. 10.0.4.2:3128) ##
 
 ```bash
 $ docker build \
-    --build-arg http_proxy=http://10.0.1.2:3128/ \
-    --build-arg https_proxy=http://10.0.1.2:3128/ \
-    -t dgricci/nodejs:0.0.1 -t dgricci/nodejs:latest .
+    --build-arg http_proxy=http://10.0.4.2:3128/ \
+    --build-arg https_proxy=http://10.0.4.2:3128/ \
+    -t dgricci/nodejs:$(< VERSION) .
+$ docker tag dgricci/nodejs:$(< VERSION) dgricci/nodejs:latest
 ```
 
 ## Build command with arguments default values ##
@@ -24,8 +32,10 @@ $ docker build \
 ```bash
 $ docker build \
     --build-arg NPM_CONFIG_LOGLEVEL=info \
-    --build-arg NODE_VERSION=7.0.0 \
-    -t dgricci/nodejs:0.0.1 -t dgricci/nodejs:latest .
+    --build-arg NODE_VERSION=8.11.3 \
+    --build-arg YARN_VERSION=1.9.2 \
+    -t dgricci/nodejs:$(< VERSION) .
+$ docker tag dgricci/nodejs:$(< VERSION) dgricci/nodejs:latest
 ```
 
 # Use #
@@ -33,8 +43,25 @@ $ docker build \
 See `dgricci/jessie` README for handling permissions with dockers volumes.
 
 ```bash
-$ docker run -it --rm dgricci/nodejs nodejs --version
-v7.0.0
+$ docker run --rm dgricci/nodejs:$(< VERSION)
+yarn versions v1.9.2
+{ yarn: '1.9.2',
+  http_parser: '2.8.0',
+  node: '8.11.3',
+  v8: '6.2.414.54',
+  uv: '1.19.1',
+  zlib: '1.2.11',
+  ares: '1.10.1-DEV',
+  modules: '57',
+  nghttp2: '1.32.0',
+  napi: '3',
+  openssl: '1.0.2o',
+  icu: '60.1',
+  unicode: '10.0',
+  cldr: '32.0',
+  tz: '2017c' }
+Done in 0.02s.
+[13:58:23] CLI version 2.0.1
 ```
 
 __Et voilà !__
