@@ -91,6 +91,12 @@ processArg () {
 #
 # main
 #
+[ ! -z "${http_proxy}" ] && {
+    dockerCmd="${dockerCmd} -e http_proxy=${http_proxy}"
+}
+[ ! -z "${https_proxy}" ] && {
+    dockerCmd="${dockerCmd} -e https_proxy=${https_proxy}"
+}
 dockerCmd="${dockerCmd} -v${PWD}:/src"
 case ${theShell} in
 yarn|npm|gulp)
