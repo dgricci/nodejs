@@ -33,9 +33,11 @@ curl -fsSLO --compress "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VE
 curl -fsSLO --compress "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt.asc"
 gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc
 grep " node-v${NODE_VERSION}-linux-x64.tar.xz\$" SHASUMS256.txt | sha256sum -c -
-tar -xJf "node-v${NODE_VERSION}-linux-x64.tar.xz" -C /usr/local/ --strip-components=1 --no-same-owner
+mkdir /usr/local/node-v${NODE_VERSION}
+tar -xJf "node-v${NODE_VERSION}-linux-x64.tar.xz" -C /usr/local/node-v${NODE_VERSION}/ --strip-components=1 --no-same-owner
 rm "node-v${NODE_VERSION}-linux-x64.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt
-ln -s /usr/local/bin/node /usr/local/bin/nodejs
+ln -s /usr/local/node-v${NODE_VERSION}/bin/node /usr/local/node-v${NODE_VERSION}/bin/nodejs
+export PATH=${PATH}:/usr/local/node-v${NODE_VERSION}/bin
 
 echo "Installing Yarn v${YARN_VERSION}"
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --import
@@ -43,14 +45,14 @@ curl -fsSLO --compress "https://github.com/yarnpkg/yarn/releases/download/v${YAR
 curl -fsSLO --compress "https://github.com/yarnpkg/yarn/releases/download/v${YARN_VERSION}/yarn-v${YARN_VERSION}.tar.gz.asc"
 gpg --batch --verify yarn-v${YARN_VERSION}.tar.gz.asc yarn-v${YARN_VERSION}.tar.gz
 tar -xzf yarn-v${YARN_VERSION}.tar.gz -C /usr/local/ --no-same-owner 
-ln -s /usr/local/yarn-v${YARN_VERSION}/bin/yarn /usr/local/bin/yarn
-ln -s /usr/local/yarn-v${YARN_VERSION}/bin/yarnpkg /usr/local/bin/yarnpkg
 rm "yarn-v${YARN_VERSION}.tar.gz.asc" "yarn-v${YARN_VERSION}.tar.gz"
+export PATH=${PATH}:usr/local/yarn-v${YARN_VERSION}/bin
 
 echo "Install some yarn packages : gulp-cli"
-yarn config set prefix /src/.yarn-config-global
+mkdir /usr/local/yarn-v${YARN_VERSION}/.config-global
+yarn config set prefix /usr/local/yarn-v${YARN_VERSION}/.config-global
 yarn global add \
-    gulp-cli \
+    gulp-cli@${GULPCLI_VERSION}
 
 # clean :
 apt-get purge -y --auto-remove \

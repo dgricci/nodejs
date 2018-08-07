@@ -35,6 +35,7 @@ $ docker build \
     --build-arg NPM_CONFIG_LOGLEVEL=info \
     --build-arg NODE_VERSION=8.11.3 \
     --build-arg YARN_VERSION=1.9.4 \
+    --build-arg GULPCLI_VERSION=2.0.1 \
     -t dgricci/nodejs:$(< VERSION) .
 $ docker tag dgricci/nodejs:$(< VERSION) dgricci/nodejs:latest
 ```
@@ -45,6 +46,7 @@ See `dgricci/jessie` README for handling permissions with dockers volumes.
 
 ```bash
 $ docker run --rm dgricci/nodejs:$(< VERSION)
+v8.11.3
 yarn versions v1.9.4
 { yarn: '1.9.4',
   http_parser: '2.8.0',
