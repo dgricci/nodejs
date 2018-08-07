@@ -2,10 +2,10 @@
 FROM dgricci/jessie:0.0.4
 LABEL       version="1.0.0" \
             node="v8.11.3" \
-            yarn="v1.9.2" \
+            yarn="v1.9.4" \
             gulpCli="v2.0.1" \
             os="Debian Jessie" \
-            description="Node (v8.11.3) with Yarn (v8.11.3) and Gulp-Cli (v2.0.1) on Debian Jessie"
+            description="Node (v8.11.3) with Yarn (v1.9.4) and Gulp-Cli (v2.0.1) on Debian Jessie"
 
 MAINTAINER  Didier Richard <didier.richard@ign.fr>
 
@@ -15,7 +15,7 @@ ENV NPM_CONFIG_LOGLEVEL ${NPM_CONFIG_LOGLEVEL:-info}
 ARG NODE_VERSION
 ENV NODE_VERSION ${NODE_VERSION:-8.11.3}
 ARG YARN_VERSION
-ENV YARN_VERSION ${YARN_VERSION:-1.9.2}
+ENV YARN_VERSION ${YARN_VERSION:-1.9.4}
 
 # volume for user's projects
 VOLUME /src

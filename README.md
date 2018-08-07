@@ -7,6 +7,7 @@
 revision:
 - 0.0.1 : 11/11/2016  
 - 0.0.2 : 29/07/2018  
+- 0.0.3 : 07/08/2018  
 
 ---
 
@@ -33,7 +34,7 @@ $ docker tag dgricci/nodejs:$(< VERSION) dgricci/nodejs:latest
 $ docker build \
     --build-arg NPM_CONFIG_LOGLEVEL=info \
     --build-arg NODE_VERSION=8.11.3 \
-    --build-arg YARN_VERSION=1.9.2 \
+    --build-arg YARN_VERSION=1.9.4 \
     -t dgricci/nodejs:$(< VERSION) .
 $ docker tag dgricci/nodejs:$(< VERSION) dgricci/nodejs:latest
 ```
@@ -44,8 +45,8 @@ See `dgricci/jessie` README for handling permissions with dockers volumes.
 
 ```bash
 $ docker run --rm dgricci/nodejs:$(< VERSION)
-yarn versions v1.9.2
-{ yarn: '1.9.2',
+yarn versions v1.9.4
+{ yarn: '1.9.4',
   http_parser: '2.8.0',
   node: '8.11.3',
   v8: '6.2.414.54',
