@@ -78,6 +78,9 @@ usage: `basename $0` [--help -h] | [--show|-s] commandAndArguments
     commandAndArguments : arguments and/or options to be handed over to ${theShell}.
                           The directory where this script is lauched is a
                           nodejs's project stands.
+                          If command is gulp a special options --bind-port
+                          can be used to bind host's port with the same port
+                          on the container's side.
 EOF
     exit $1
 }
@@ -86,7 +89,20 @@ EOF
 #
 processArg () {
     arg="$1"
-    cmdToExec="${cmdToExec} $arg"
+    case "${theShell}" in
+    gulp)
+        if [ $(echo "$arg" | grep -c -e '^--bind-port=') -eq 1 ] ; then
+            # bind host's port with docker's port
+            local port="$(echo ${arg} | sed -e 's/^--bind-port=\([0-9]*\)/\1/')"
+            dockerSpecialOpts="${dockerSpecialOpts} --publish=${port}:${port}"
+        else
+            cmdToExec="${cmdToExec} $arg"
+        fi
+        ;;
+    *)
+        cmdToExec="${cmdToExec} $arg"
+        ;;
+    esac
 }
 #
 # main

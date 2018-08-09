@@ -4,10 +4,10 @@
 trap 'exit' ERR
 set -E
 
-# update system :
+# update system : bzip2 is needed when installing nodejs packages ...
 apt-get -qy update
 apt-get -qy --no-install-suggests --no-install-recommends install \
-    xz-utils
+    xz-utils bzip2
 
 echo "Add 'node' group and 'node' user (no HOME)"
 groupadd -r node
